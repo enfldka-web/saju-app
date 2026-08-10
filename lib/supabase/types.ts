@@ -20,6 +20,7 @@ export interface Database {
         Update: Partial<{
           phone: string | null;
         }>;
+        Relationships: [];
       };
       readings: {
         Row: {
@@ -43,6 +44,7 @@ export interface Database {
         Update: Partial<{
           interpretation: unknown | null;
         }>;
+        Relationships: [];
       };
       payments: {
         Row: {
@@ -77,7 +79,10 @@ export interface Database {
           toss_payment_key: string | null;
           raw_response: unknown | null;
         }>;
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
   };
 }

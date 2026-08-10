@@ -4,7 +4,7 @@ import type { CalendarType, Gender } from "@/lib/saju";
 import { generateFreeSummary } from "@/lib/ai/free-summary";
 import { PillarTable } from "@/components/result/pillar-table";
 import { OhaengBar } from "@/components/result/ohaeng-bar";
-import { LockedCategories } from "@/components/result/locked-categories";
+import { ReadingUnlock } from "@/components/result/reading-unlock";
 
 function parseSearchParams(params: Record<string, string | string[] | undefined>) {
   const get = (key: string) => {
@@ -92,7 +92,7 @@ export default async function ResultPage({
         <OhaengBar distribution={result.ohaengDistribution} />
       </section>
 
-      <LockedCategories />
+      <ReadingUnlock sajuInput={params} />
 
       <Link href="/" className="text-center text-xs text-paper-500 underline underline-offset-4">
         다른 생년월일로 다시 보기
