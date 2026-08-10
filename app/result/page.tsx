@@ -80,8 +80,8 @@ export default async function ResultPage({
   return (
     <main className="mx-auto flex w-full max-w-sm flex-col gap-8 px-6 py-8 pb-16">
       <header className="flex flex-col gap-2">
-        <span className="text-xs tracking-[0.2em] text-gold-500">干支</span>
-        <h1 className="font-display text-2xl font-bold text-paper-100">사주 원국</h1>
+        <span className="text-xs tracking-[0.2em] text-gold-500">干支 · 발급 완료</span>
+        <h1 className="font-display text-2xl font-bold text-paper-100">사주 원국 증서</h1>
         <p className="text-sm text-paper-500">
           {result.chart.resolvedSolar.year}년 {result.chart.resolvedSolar.month}월{" "}
           {result.chart.resolvedSolar.day}일 · {sajuInput.gender === "male" ? "남성" : "여성"}

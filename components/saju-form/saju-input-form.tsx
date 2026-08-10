@@ -178,11 +178,11 @@ export function SajuInputForm() {
           disabled={submitting}
           className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gold-500 py-3.5 text-sm font-semibold text-ink-950 transition-colors hover:bg-gold-400 disabled:opacity-60"
         >
-          무료로 사주 확인하기
+          무료로 증서 발급받기
           <IconArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </button>
         <p className="text-center text-[11px] text-paper-500">
-          결제 없이 사주 원국과 오행 분포를 바로 확인할 수 있어요
+          결제 없이 사주 원국 증서와 오행 분포를 바로 확인할 수 있어요
         </p>
       </div>
     </form>

@@ -4,14 +4,14 @@ export default function Home() {
   return (
     <main className="mx-auto flex h-dvh w-full max-w-sm flex-col px-6 py-8 md:h-auto md:min-h-dvh md:justify-center md:py-20">
       <header className="flex flex-col gap-3 pb-8">
-        <span className="text-xs tracking-[0.2em] text-gold-500">干支</span>
+        <span className="text-xs tracking-[0.2em] text-gold-500">干支 · 증서 발급 신청</span>
         <h1 className="font-display text-3xl leading-[1.3] font-bold text-paper-100">
-          태어난 순간의 우주,
+          나만의 사주 증서,
           <br />
-          간지로 읽습니다
+          지금 발급합니다
         </h1>
         <p className="text-sm text-paper-500">
-          정통 만세력 계산으로 뽑은 사주 원국을 무료로 확인하세요
+          정통 만세력 계산으로 작성된 사주 원국 증서를 무료로 확인하세요
         </p>
       </header>
 

@@ -107,20 +107,39 @@ export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInpu
 
   if (status === "unlocked" && interpretation) {
     return (
-      <div className="flex flex-col gap-3">
-        <h2 className="font-display text-lg font-bold text-paper-100">상세 리딩</h2>
-        <div className="flex flex-col divide-y divide-ink-700 rounded-2xl border border-ink-700 bg-ink-900">
-          {CATEGORY_META.map(({ key, label }) => {
-            const content = interpretation[key as keyof SajuInterpretation];
-            return (
-              <div key={key} className="flex flex-col gap-1.5 px-4 py-4">
-                <span className="text-xs text-gold-500">{label}</span>
-                <span className="text-sm font-medium text-paper-100">{content.headline}</span>
-                <p className="text-sm leading-relaxed text-paper-500">{content.body}</p>
-              </div>
-            );
-          })}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-baseline justify-between">
+          <h2 className="font-display text-lg font-bold text-paper-100">상세 리딩</h2>
+          <span className="text-[11px] text-gold-500">발급 완료 · 인장 확인됨</span>
         </div>
+
+        {CATEGORY_META.map(({ key, label }) => {
+          const content = interpretation[key as keyof SajuInterpretation];
+          return (
+            <div key={key} className="rounded-sm border border-ink-700 bg-ink-900 p-5">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-[3px] w-4 rounded-full bg-gold-500" />
+                <span className="text-[11px] tracking-[0.15em] text-gold-500">{label}</span>
+              </div>
+              <p className="font-display text-base font-bold text-paper-100">{content.headline}</p>
+
+              <div className="mt-4 flex flex-col gap-3.5 border-t border-ink-700 pt-4">
+                <div>
+                  <p className="mb-1 text-[11px] text-parchment-rule">지금 이 시기</p>
+                  <p className="text-sm leading-relaxed text-paper-300">{content.currentFlow}</p>
+                </div>
+                <div>
+                  <p className="mb-1 text-[11px] text-parchment-rule">실전 조언</p>
+                  <p className="text-sm leading-relaxed text-paper-300">{content.advice}</p>
+                </div>
+                <div>
+                  <p className="mb-1 text-[11px] text-parchment-rule">주목할 시기</p>
+                  <p className="text-sm leading-relaxed text-paper-300">{content.timing}</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     );
   }

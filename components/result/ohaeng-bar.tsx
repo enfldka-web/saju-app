@@ -8,7 +8,7 @@ export function OhaengBar({ distribution }: { distribution: OhaengDistribution }
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-ink-800">
+      <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-ink-800 ring-1 ring-ink-700">
         {ORDER.map((key) => {
           const share = distribution[key] / total;
           if (share === 0) return null;
@@ -20,16 +20,15 @@ export function OhaengBar({ distribution }: { distribution: OhaengDistribution }
           );
         })}
       </div>
-      <div className="grid grid-cols-5 gap-1.5">
+      <div className="grid grid-cols-5 divide-x divide-ink-700 rounded-sm border border-ink-700 bg-ink-900">
         {ORDER.map((key) => (
-          <div key={key} className="flex flex-col items-center gap-1">
+          <div key={key} className="flex flex-col items-center gap-1.5 py-3">
             <span
-              className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-medium text-ink-950"
+              className="h-[3px] w-4 rounded-full"
               style={{ background: `var(${OHAENG_COLOR_VAR[key]})` }}
-            >
-              {OHAENG_LABEL_HANJA[key]}
-            </span>
-            <span className="text-[11px] text-paper-500">{key}</span>
+            />
+            <span className="font-display text-sm text-paper-100">{OHAENG_LABEL_HANJA[key]}</span>
+            <span className="text-[10px] text-paper-500">{key}</span>
             <span className="text-xs font-semibold text-paper-100">{distribution[key]}</span>
           </div>
         ))}
