@@ -41,7 +41,9 @@ export async function POST(request: Request) {
   try {
     const interpretation = await generateInterpretation(sajuResult);
     return NextResponse.json({ chart: sajuResult.chart, interpretation });
-  } catch {
-    return NextResponse.json({ error: "AI 해석 생성에 실패했어요." }, { status: 502 });
+  } catch (e) {
+    // 이 라우트는 이미 비밀 토큰으로 잠겨있으므로 진단을 위해 실제 에러를 그대로 노출한다.
+    const message = e instanceof Error ? e.message : String(e);
+    return NextResponse.json({ error: `AI 해석 생성에 실패했어요: ${message}` }, { status: 502 });
   }
 }
