@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { calculateSaju } from "@/lib/saju";
+import { calculateSaju, getCurrentSewoon, generateSewoonSummary } from "@/lib/saju";
 import type { CalendarType, Gender } from "@/lib/saju";
 import { generateFreeSummary } from "@/lib/ai/free-summary";
 import { PillarTable } from "@/components/result/pillar-table";
 import { OhaengBar } from "@/components/result/ohaeng-bar";
+import { YearFortune } from "@/components/result/year-fortune";
 import { ReadingUnlock } from "@/components/result/reading-unlock";
 
 function parseSearchParams(params: Record<string, string | string[] | undefined>) {
@@ -76,6 +77,8 @@ export default async function ResultPage({
   }
 
   const summary = generateFreeSummary(result);
+  const sewoon = getCurrentSewoon();
+  const yearSummary = generateSewoonSummary(result.chart.day.ohaeng[0], sewoon);
 
   return (
     <main className="mx-auto flex w-full max-w-sm flex-col gap-8 px-6 py-8 pb-16">
@@ -92,6 +95,13 @@ export default async function ResultPage({
         <PillarTable year={result.chart.year} month={result.chart.month} day={result.chart.day} time={result.chart.time} />
         <p className="rounded-xl bg-ink-900 px-4 py-3 text-sm leading-relaxed text-paper-100">{summary}</p>
       </section>
+
+      <YearFortune
+        year={sewoon.year}
+        ganjiHangul={sewoon.pillar.hangul}
+        ganjiHanja={sewoon.pillar.hanja}
+        summary={yearSummary}
+      />
 
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-lg font-bold text-paper-100">오행 분포</h2>

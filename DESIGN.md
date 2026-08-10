@@ -46,6 +46,9 @@ Full palette 전략: 마호가니(배경) + 양피지(증서 카드, 반전된 �
 
 - `components/result/pillar-table.tsx`: **핵심 시그니처 컴포넌트.** 양피지(parchment) 카드 위에 4주(년/월/일/시) 표, 안쪽 인셋 보더로 증서 프레임 연출, 우하단에 회전된 주홍 인장(일주 간지 + "日主") 오버레이.
 - `components/result/ohaeng-bar.tsx`: 비율 바 + 5칸 ledger 타일(원소 색 hairline + 한자 + 개수).
+- `components/result/year-fortune.tsx`: 무료로 제공되는 올해 세운(歲運) 총평 — AI 호출 없이 `lib/saju/sewoon.ts`의 결정론적 오행 생극관계 규칙으로 생성.
+- `components/result/category-meta.ts`: 4개 카테고리(커리어=수/재물=토/연애=화/건강=목)에 서로 다른 오행 색을 매핑 — 잠금 리스트의 작은 점, 해제 후 카드의 라벨·헤드라인 색으로 재사용해 카테고리를 시각적으로 구분.
+- `components/result/reading-unlock.tsx` 해제 화면: 카테고리별 헤드라인은 `text-xl` 세리프로 크고 쉬운 말로, 하단에 1~12월 월별 운세를 3열 그리드로 표시(`lib/saju/sewoon.ts`의 `getMonthPillarsForYear`로 계산한 실제 월주를 AI 프롬프트에 주입해 근거로 삼음).
 - `components/result/reading-unlock.tsx`: 잠금 상태는 리스트, 해제 후에는 카테고리별 독립 카드로 전환 — 각 카드 안에 "지금 이 시기 / 실전 조언 / 주목할 시기" 3단 섹션.
 - `components/ui/segmented.tsx`, `select-field.tsx`, `icons.tsx`: 토큰 기반이라 v1→v2 전환 시 별도 수정 없이 색만 자동 반영됨.
 

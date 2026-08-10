@@ -6,6 +6,7 @@ import type { SajuInput } from "@/lib/saju";
 import type { SajuInterpretation } from "@/lib/ai/types";
 import { IconLock } from "@/components/ui/icons";
 import { CATEGORY_META } from "./category-meta";
+import { OHAENG_COLOR_VAR } from "./ohaeng-colors";
 
 const PRICE_KRW = 9900;
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
@@ -113,15 +114,18 @@ export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInpu
           <span className="text-[11px] text-gold-500">발급 완료 · 인장 확인됨</span>
         </div>
 
-        {CATEGORY_META.map(({ key, label }) => {
+        {CATEGORY_META.map(({ key, label, color }) => {
           const content = interpretation[key as keyof SajuInterpretation];
+          const accent = `var(${OHAENG_COLOR_VAR[color]})`;
           return (
             <div key={key} className="rounded-sm border border-ink-700 bg-ink-900 p-5">
               <div className="mb-3 flex items-center gap-2">
-                <span className="h-[3px] w-4 rounded-full bg-gold-500" />
-                <span className="text-[11px] tracking-[0.15em] text-gold-500">{label}</span>
+                <span className="h-[3px] w-5 rounded-full" style={{ background: accent }} />
+                <span className="text-xs font-semibold tracking-[0.1em]" style={{ color: accent }}>
+                  {label}
+                </span>
               </div>
-              <p className="font-display text-base font-bold text-paper-100">{content.headline}</p>
+              <p className="font-display text-xl font-bold leading-snug text-paper-100">{content.headline}</p>
 
               <div className="mt-4 flex flex-col gap-3.5 border-t border-ink-700 pt-4">
                 <div>
@@ -137,6 +141,25 @@ export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInpu
                   <p className="text-sm leading-relaxed text-paper-300">{content.timing}</p>
                 </div>
               </div>
+
+              {content.monthly && content.monthly.length > 0 && (
+                <div className="mt-4 border-t border-ink-700 pt-4">
+                  <p className="mb-2 text-[11px] text-parchment-rule">월별 운세</p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {content.monthly
+                      .slice()
+                      .sort((a, b) => a.month - b.month)
+                      .map((m) => (
+                        <div key={m.month} className="rounded-sm bg-ink-800 px-2 py-2">
+                          <p className="text-[10px] font-semibold" style={{ color: accent }}>
+                            {m.month}월
+                          </p>
+                          <p className="mt-0.5 text-[11px] leading-snug text-paper-300">{m.note}</p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
@@ -152,10 +175,16 @@ export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInpu
       </div>
 
       <div className="flex flex-col divide-y divide-ink-700 rounded-2xl border border-ink-700 bg-ink-900">
-        {CATEGORY_META.map(({ key, label, teaser }) => (
+        {CATEGORY_META.map(({ key, label, teaser, color }) => (
           <div key={key} className="flex items-center justify-between gap-3 px-4 py-3.5">
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-medium text-paper-100">{label}</span>
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1.5">
+                <span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: `var(${OHAENG_COLOR_VAR[color]})` }}
+                />
+                <span className="text-sm font-semibold text-paper-100">{label}</span>
+              </div>
               <span className="text-xs text-paper-500 blur-[3px] select-none">{teaser}</span>
             </div>
             <IconLock className="h-4 w-4 shrink-0 text-paper-500" />

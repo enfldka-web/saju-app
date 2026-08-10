@@ -33,7 +33,7 @@ function validateInput(input: SajuInput): void {
   }
 }
 
-function buildPillar(ganZhiHanja: string, wuxingHanja: string): Pillar {
+export function buildPillar(ganZhiHanja: string, wuxingHanja: string): Pillar {
   const ganHanja = ganZhiHanja[0];
   const zhiHanja = ganZhiHanja[1];
   return {
