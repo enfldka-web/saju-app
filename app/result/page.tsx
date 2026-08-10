@@ -20,20 +20,24 @@ function parseSearchParams(params: Record<string, string | string[] | undefined>
   const leap = get("leap") === "1";
   const hourRaw = get("hour");
   const hour = hourRaw === undefined ? undefined : Number(hourRaw);
+  const previewToken = get("preview");
 
   if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
     return null;
   }
 
   return {
-    calendar: calendar as CalendarType,
-    year,
-    month,
-    day,
-    isLeapMonth: leap,
-    hour,
-    minute: 0,
-    gender,
+    input: {
+      calendar: calendar as CalendarType,
+      year,
+      month,
+      day,
+      isLeapMonth: leap,
+      hour,
+      minute: 0,
+      gender,
+    },
+    previewToken,
   };
 }
 
@@ -42,9 +46,9 @@ export default async function ResultPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const params = parseSearchParams(await searchParams);
+  const parsed = parseSearchParams(await searchParams);
 
-  if (!params) {
+  if (!parsed) {
     return (
       <main className="mx-auto flex h-dvh w-full max-w-sm flex-col items-center justify-center gap-4 px-6 text-center">
         <p className="text-sm text-paper-500">생년월일 정보가 없어요.</p>
@@ -55,9 +59,11 @@ export default async function ResultPage({
     );
   }
 
+  const { input: sajuInput, previewToken } = parsed;
+
   let result;
   try {
-    result = calculateSaju(params);
+    result = calculateSaju(sajuInput);
   } catch {
     return (
       <main className="mx-auto flex h-dvh w-full max-w-sm flex-col items-center justify-center gap-4 px-6 text-center">
@@ -78,7 +84,7 @@ export default async function ResultPage({
         <h1 className="font-display text-2xl font-bold text-paper-100">사주 원국</h1>
         <p className="text-sm text-paper-500">
           {result.chart.resolvedSolar.year}년 {result.chart.resolvedSolar.month}월{" "}
-          {result.chart.resolvedSolar.day}일 · {params.gender === "male" ? "남성" : "여성"}
+          {result.chart.resolvedSolar.day}일 · {sajuInput.gender === "male" ? "남성" : "여성"}
         </p>
       </header>
 
@@ -92,7 +98,7 @@ export default async function ResultPage({
         <OhaengBar distribution={result.ohaengDistribution} />
       </section>
 
-      <ReadingUnlock sajuInput={params} />
+      <ReadingUnlock sajuInput={sajuInput} previewToken={previewToken} />
 
       <Link href="/" className="text-center text-xs text-paper-500 underline underline-offset-4">
         다른 생년월일로 다시 보기

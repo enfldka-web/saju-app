@@ -33,10 +33,32 @@ function isUserCancel(error: unknown): boolean {
   return e?.code === "USER_CANCEL" || (typeof e?.message === "string" && e.message.includes("취소"));
 }
 
-export function ReadingUnlock({ sajuInput }: { sajuInput: SajuInput }) {
+export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInput; previewToken?: string }) {
   const [status, setStatus] = useState<Status>("locked");
   const [interpretation, setInterpretation] = useState<SajuInterpretation | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  async function handlePreviewUnlock() {
+    setStatus("processing");
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch("/api/payments/debug-unlock", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ token: previewToken, sajuInput }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error ?? "미리보기 생성에 실패했어요.");
+      }
+      setInterpretation(data.interpretation);
+      setStatus("unlocked");
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : "미리보기 중 문제가 발생했어요.");
+      setStatus("error");
+    }
+  }
 
   async function handleUnlock() {
     setStatus("processing");
@@ -132,6 +154,17 @@ export function ReadingUnlock({ sajuInput }: { sajuInput: SajuInput }) {
       >
         {status === "processing" ? "결제 확인 중..." : `상세 리딩 잠금 해제 · ${PRICE_KRW.toLocaleString()}원`}
       </button>
+
+      {previewToken && (
+        <button
+          type="button"
+          onClick={handlePreviewUnlock}
+          disabled={status === "processing"}
+          className="w-full rounded-xl border border-ink-600 py-3 text-xs text-paper-500 transition-colors hover:text-paper-100 disabled:opacity-70"
+        >
+          미리보기 열기 (테스트 전용, 결제 없음)
+        </button>
+      )}
     </div>
   );
 }
