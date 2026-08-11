@@ -1,7 +1,7 @@
 import "server-only";
+import { SINGLE_READING_PRICE_KRW } from "./constants";
 
-/** Phase 1 유일 상품: 상세 리딩 단건. 클라이언트가 보낸 금액을 신뢰하지 않고 이 값으로만 검증한다. */
-export const SINGLE_READING_PRICE_KRW = 9900;
+export { SINGLE_READING_PRICE_KRW };
 
 interface TossConfirmParams {
   paymentKey: string;

@@ -7,8 +7,8 @@ import type { SajuInterpretation } from "@/lib/ai/types";
 import { IconLock } from "@/components/ui/icons";
 import { CATEGORY_META } from "./category-meta";
 import { OHAENG_COLOR_VAR } from "./ohaeng-colors";
+import { SINGLE_READING_PRICE_KRW as PRICE_KRW } from "@/lib/payments/constants";
 
-const PRICE_KRW = 9900;
 const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY!;
 
 type Status = "locked" | "processing" | "unlocked" | "error";
@@ -145,16 +145,19 @@ export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInpu
               {content.monthly && content.monthly.length > 0 && (
                 <div className="mt-4 border-t border-ink-700 pt-4">
                   <p className="mb-2 text-[11px] text-parchment-rule">월별 운세</p>
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div className="flex flex-col divide-y divide-ink-800 rounded-sm border border-ink-800">
                     {content.monthly
                       .slice()
                       .sort((a, b) => a.month - b.month)
                       .map((m) => (
-                        <div key={m.month} className="rounded-sm bg-ink-800 px-2 py-2">
-                          <p className="text-[10px] font-semibold" style={{ color: accent }}>
+                        <div key={m.month} className="flex items-center gap-3 bg-ink-800/40 px-3 py-2.5">
+                          <span
+                            className="w-9 shrink-0 text-xs font-semibold"
+                            style={{ color: accent }}
+                          >
                             {m.month}월
-                          </p>
-                          <p className="mt-0.5 text-[11px] leading-snug text-paper-300">{m.note}</p>
+                          </span>
+                          <span className="text-xs leading-snug text-paper-300">{m.note}</span>
                         </div>
                       ))}
                   </div>
