@@ -8,7 +8,12 @@ export function KakaoLoginButton({ next = "/my" }: { next?: string }) {
     const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
     await supabase.auth.signInWithOAuth({
       provider: "kakao",
-      options: { redirectTo },
+      options: {
+        redirectTo,
+        // 개인 개발자 카카오 앱은 비즈니스 인증 없이는 이메일 동의항목을 못 받는다.
+        // 이메일 없이 닉네임/프로필 사진만 요청하도록 스코프를 명시적으로 좁힌다.
+        scopes: "profile_nickname profile_image",
+      },
     });
   }
 
