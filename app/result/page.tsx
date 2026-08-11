@@ -1,53 +1,54 @@
 import Link from "next/link";
-import { calculateSaju, getCurrentSewoon, generateSewoonSummary } from "@/lib/saju";
-import type { CalendarType, Gender } from "@/lib/saju";
+import type { Metadata } from "next";
+import { calculateSaju, getCurrentSewoon, generateSewoonSummary, parseSajuSearchParams } from "@/lib/saju";
+import type { ResultSearchParams } from "@/lib/saju";
 import { generateFreeSummary } from "@/lib/ai/free-summary";
 import { PillarTable } from "@/components/result/pillar-table";
 import { OhaengBar } from "@/components/result/ohaeng-bar";
 import { YearFortune } from "@/components/result/year-fortune";
 import { ReadingUnlock } from "@/components/result/reading-unlock";
+import { ShareButton } from "@/components/result/share-button";
 
-function parseSearchParams(params: Record<string, string | string[] | undefined>) {
-  const get = (key: string) => {
-    const value = params[key];
-    return Array.isArray(value) ? value[0] : value;
-  };
-
-  const calendar = get("calendar") === "lunar" ? "lunar" : "solar";
-  const year = Number(get("year"));
-  const month = Number(get("month"));
-  const day = Number(get("day"));
-  const gender: Gender = get("gender") === "male" ? "male" : "female";
-  const leap = get("leap") === "1";
-  const hourRaw = get("hour");
-  const hour = hourRaw === undefined ? undefined : Number(hourRaw);
-  const previewToken = get("preview");
-
-  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
-    return null;
+function shareCardUrl(searchParams: ResultSearchParams): string {
+  const qs = new URLSearchParams();
+  for (const key of ["calendar", "year", "month", "day", "hour", "gender", "leap"]) {
+    const value = searchParams[key];
+    const flat = Array.isArray(value) ? value[0] : value;
+    if (flat !== undefined) qs.set(key, flat);
   }
+  return `/api/share-card?${qs.toString()}`;
+}
 
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<ResultSearchParams>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const parsed = parseSajuSearchParams(params);
+  if (!parsed) return {};
+
+  const imageUrl = shareCardUrl(params);
   return {
-    input: {
-      calendar: calendar as CalendarType,
-      year,
-      month,
-      day,
-      isLeapMonth: leap,
-      hour,
-      minute: 0,
-      gender,
+    openGraph: {
+      title: "간지 — 나의 사주 증서",
+      description: "정통 만세력 계산과 AI 해석으로 발급받은 나만의 사주 증서예요.",
+      images: [{ url: imageUrl, width: 1200, height: 630 }],
     },
-    previewToken,
+    twitter: {
+      card: "summary_large_image",
+      images: [imageUrl],
+    },
   };
 }
 
 export default async function ResultPage({
   searchParams,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<ResultSearchParams>;
 }) {
-  const parsed = parseSearchParams(await searchParams);
+  const rawParams = await searchParams;
+  const parsed = parseSajuSearchParams(rawParams);
 
   if (!parsed) {
     return (
@@ -96,6 +97,7 @@ export default async function ResultPage({
           <section className="flex flex-col gap-3">
             <PillarTable year={result.chart.year} month={result.chart.month} day={result.chart.day} time={result.chart.time} />
             <p className="rounded-xl bg-ink-900 px-4 py-3 text-sm leading-relaxed text-paper-100">{summary}</p>
+            <ShareButton shareText={summary} imageUrl={shareCardUrl(rawParams)} />
           </section>
 
           <YearFortune

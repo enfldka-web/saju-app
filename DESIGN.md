@@ -69,4 +69,4 @@ Full palette 전략: 마호가니(배경) + 양피지(증서 카드, 반전된 �
 
 - 브랜드명 "간지(干支)"는 제안 단계 — 사용자 확정 필요.
 - 라이트 모드 미구현.
-- 결과 이미지 공유 카드(OG 이미지)는 별도 작업(Phase 1 Task #9) — 이 증서 컨셉과 공유 카드가 시너지가 좋음(증서 자체가 "소장하고 싶은" 이미지).
+- 공유 카드(`app/api/share-card/route.tsx`, next/og ImageResponse, 1200x630): 완료. 증서 카드 + 올해 총운 + 요청 host를 워터마크로 삽입. `/result` 페이지 `generateMetadata`로 og:image/twitter:image에 연결해 카카오톡 등에 링크 공유 시 자동으로 미리보기가 뜬다. `components/result/share-button.tsx`가 Web Share API(모바일)와 클립보드 복사(데스크톱)를 함께 처리.

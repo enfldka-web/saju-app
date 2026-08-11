@@ -7,3 +7,5 @@ export type { Ohaeng } from "./ganji-maps";
 export { sajuInputSchema } from "./schema";
 export { getCurrentSewoon, generateSewoonSummary, getMonthPillarsForYear, getElementRelationship } from "./sewoon";
 export type { SewoonRelationship } from "./sewoon";
+export { parseSajuSearchParams } from "./parse-search-params";
+export type { ResultSearchParams } from "./parse-search-params";
