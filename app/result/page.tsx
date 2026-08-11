@@ -8,6 +8,8 @@ import { OhaengBar } from "@/components/result/ohaeng-bar";
 import { YearFortune } from "@/components/result/year-fortune";
 import { ReadingUnlock } from "@/components/result/reading-unlock";
 import { ShareButton } from "@/components/result/share-button";
+import { SaveReadingOnMount } from "@/components/auth/save-reading-on-mount";
+import { createClient } from "@/lib/supabase/server";
 
 function shareCardUrl(searchParams: ResultSearchParams): string {
   const qs = new URLSearchParams();
@@ -81,17 +83,40 @@ export default async function ResultPage({
   const sewoon = getCurrentSewoon();
   const yearSummary = generateSewoonSummary(result.chart.day.ohaeng[0], sewoon);
 
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const currentPath = `/result?${new URLSearchParams(
+    Object.fromEntries(Object.entries(rawParams).filter(([, v]) => typeof v === "string")) as Record<string, string>
+  ).toString()}`;
+
   return (
     <main className="mx-auto w-full max-w-sm px-6 py-8 pb-16 lg:max-w-6xl lg:px-12 lg:py-16">
       <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[400px_1fr] lg:items-start lg:gap-14">
         <div className="flex flex-col gap-8 lg:sticky lg:top-14">
           <header className="flex flex-col gap-2">
-            <span className="text-xs tracking-[0.2em] text-gold-500 lg:text-sm">干支 · 발급 완료</span>
+            <div className="flex items-center justify-between">
+              <span className="text-xs tracking-[0.2em] text-gold-500 lg:text-sm">干支 · 발급 완료</span>
+              {user ? (
+                <Link href="/my" className="text-[11px] text-paper-500 underline underline-offset-4 hover:text-paper-100">
+                  마이페이지
+                </Link>
+              ) : (
+                <Link
+                  href={`/login?next=${encodeURIComponent(currentPath)}`}
+                  className="text-[11px] text-paper-500 underline underline-offset-4 hover:text-paper-100"
+                >
+                  로그인하고 저장하기
+                </Link>
+              )}
+            </div>
             <h1 className="font-display text-2xl font-bold text-paper-100 lg:text-4xl">사주 원국 증서</h1>
             <p className="text-sm text-paper-500 lg:text-base">
               {result.chart.resolvedSolar.year}년 {result.chart.resolvedSolar.month}월{" "}
               {result.chart.resolvedSolar.day}일 · {sajuInput.gender === "male" ? "남성" : "여성"}
             </p>
+            {user && <SaveReadingOnMount sajuInput={sajuInput} />}
           </header>
 
           <section className="flex flex-col gap-3">

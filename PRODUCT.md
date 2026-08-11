@@ -33,8 +33,8 @@ Next.js (App Router) + TypeScript + Tailwind CSS, Supabase(Auth/Postgres/Storage
 ## Capabilities and Constraints
 
 - 계산 엔진(`lib/saju/`)은 lunar-javascript 기반 순수 함수로 구현되어 결정론적이며 단위 테스트로 검증됨 (`docs/SAJU_VALIDATION.md`). AI는 이 계산 결과를 해석하는 역할만 하고 사주 계산 자체를 하지 않는다(환각 방지).
-- 동일 생년월일시+성별 조합은 재계산하지 않고 캐싱된 결과를 재사용한다(`readings` 테이블).
-- 회원가입 없이도 결제 가능하되, 결과 재조회를 위한 간편 로그인(전화번호/카카오)을 옵션으로 제공한다.
+- 동일 생년월일시+성별 조합에 대한 전역 AI/계산 캐싱은 아직 구현 안 됨(스키마의 `input_hash`는 현재 사용자별 재조회 캐싱에만 쓰임, `readings_user_input_hash_key`).
+- 회원가입 없이도 결제 가능(비회원 결제 지원, `ANONYMOUS` customerKey). 카카오 로그인(Supabase Auth OAuth)으로 재조회용 마이페이지(`/my`) 제공 — 로그인 시 무료 조회는 자동 저장, 결제 완료 시 해석까지 저장. 전화번호/SMS 로그인은 별도 SMS 발송업체 계약이 필요해 보류.
 - 결제 로그(누가/언제/무엇을/얼마)는 사업자 정산을 위해 별도 테이블(`payments`)로 관리한다.
 - 개인정보(생년월일, 전화번호 등)는 최소 수집 원칙을 따른다.
 - 가격: 상세 리딩 1회 19,900원(확정, `lib/payments/constants.ts`) / 월간 구독 14,900원(예시, 구독 상품 미구현이라 논의 후 확정 필요).

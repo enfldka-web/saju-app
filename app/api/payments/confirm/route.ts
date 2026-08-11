@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { calculateSaju, sajuInputSchema } from "@/lib/saju";
+import { hashSajuInput } from "@/lib/saju/input-hash";
 import { generateInterpretation } from "@/lib/ai/interpret";
+import type { SajuInterpretation } from "@/lib/ai/types";
 import { confirmTossPayment, TossConfirmError, SINGLE_READING_PRICE_KRW } from "@/lib/payments/toss";
-import { createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
+import type { SajuResult } from "@/lib/saju";
 
 const requestSchema = z.object({
   paymentKey: z.string().min(1),
@@ -32,6 +35,30 @@ async function logPayment(params: {
   } catch (e) {
     // Supabase 미연결 등으로 로깅이 실패해도 결제/해석 응답 자체는 막지 않는다.
     console.error("결제 로그 저장 실패:", e);
+  }
+}
+
+/** 로그인한 사용자가 결제한 경우, 마이페이지에서 상세 리딩까지 다시 볼 수 있도록 저장한다. */
+async function saveUnlockedReading(sajuInput: z.infer<typeof sajuInputSchema>, sajuResult: SajuResult, interpretation: SajuInterpretation) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+
+    await supabase.from("readings").upsert(
+      {
+        input_hash: hashSajuInput(sajuInput),
+        input: sajuInput,
+        chart: sajuResult.chart,
+        interpretation,
+        user_id: user.id,
+      },
+      { onConflict: "user_id,input_hash" }
+    );
+  } catch (e) {
+    console.error("리딩 저장 실패:", e);
   }
 }
 
@@ -70,6 +97,7 @@ export async function POST(request: Request) {
 
   try {
     const interpretation = await generateInterpretation(sajuResult);
+    await saveUnlockedReading(sajuInput, sajuResult, interpretation);
     return NextResponse.json({ chart: sajuResult.chart, interpretation });
   } catch {
     return NextResponse.json(

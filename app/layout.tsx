@@ -15,7 +15,12 @@ const pretendard = localFont({
   weight: "45 920",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "간지 — 나의 사주 증서",
   description: "정확한 만세력 계산과 AI 해석으로 발급하는 나만의 사주 증서.",
 };
