@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { loadTossPayments, ANONYMOUS } from "@tosspayments/tosspayments-sdk";
 import type { SajuInput } from "@/lib/saju";
 import type { SajuInterpretation } from "@/lib/ai/types";
@@ -205,6 +206,18 @@ export function ReadingUnlock({ sajuInput, previewToken }: { sajuInput: SajuInpu
       >
         {status === "processing" ? "결제 확인 중..." : `상세 리딩 잠금 해제 · ${PRICE_KRW.toLocaleString()}원`}
       </button>
+
+      <p className="text-center text-[11px] leading-relaxed text-paper-500">
+        결제 시 콘텐츠 제공이 즉시 시작되며, 이후 청약철회가 제한됩니다.{" "}
+        <Link href="/terms" className="underline underline-offset-4">
+          이용약관
+        </Link>{" "}
+        및{" "}
+        <Link href="/privacy" className="underline underline-offset-4">
+          개인정보처리방침
+        </Link>
+        에 동의한 것으로 간주합니다.
+      </p>
 
       {previewToken && (
         <button

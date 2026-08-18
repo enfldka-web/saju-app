@@ -77,6 +77,16 @@ export default async function MyPage() {
           })}
         </div>
       )}
+
+      <footer className="mt-10 flex flex-wrap justify-center gap-x-5 gap-y-1 border-t border-ink-800 pt-6 text-[11px] text-paper-500">
+        <span>© 간지</span>
+        <Link href="/terms" className="underline-offset-4 hover:underline">
+          이용약관
+        </Link>
+        <Link href="/privacy" className="underline-offset-4 hover:underline">
+          개인정보처리방침
+        </Link>
+      </footer>
     </main>
   );
 }
