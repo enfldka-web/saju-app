@@ -15,13 +15,19 @@ export default function TermsPage() {
 
       <div className="flex flex-col gap-8 text-sm leading-relaxed text-paper-300">
         <section className="rounded-2xl border border-ink-700 bg-ink-900 p-5 text-xs leading-relaxed text-paper-500">
-          간지(干支)는 현재 사업자등록 전 개인 운영자 기준으로 서비스를 운영하고 있습니다. 사업자등록을 마치는 대로 상호, 사업자등록번호,
-          통신판매업 신고번호를 이 문서에 갱신해 고지합니다.
+          <p className="mb-2 font-semibold text-paper-300">사업자 정보</p>
+          <ul className="flex flex-col gap-1">
+            <li>상호: 마메드네</li>
+            <li>대표자: 김진석</li>
+            <li>사업장 소재지: 서울특별시 노원구 동일로215길 48</li>
+            <li>사업자등록번호: 809-11-03069</li>
+            <li>통신판매업 신고번호: 확인 중 — 확인되는 대로 갱신합니다</li>
+          </ul>
         </section>
 
         <Article title="제1조 (목적)">
           <p>
-            이 약관은 간지(이하 &ldquo;회사&rdquo;)가 제공하는 사주 계산 및 AI 해석 서비스(이하 &ldquo;서비스&rdquo;)의 이용조건 및
+            이 약관은 마메드네(이하 &ldquo;회사&rdquo;)가 제공하는 &ldquo;간지&rdquo; 사주 계산 및 AI 해석 서비스(이하 &ldquo;서비스&rdquo;)의 이용조건 및
             절차, 이용자와 회사의 권리·의무·책임사항을 정함을 목적으로 합니다.
           </p>
         </Article>
